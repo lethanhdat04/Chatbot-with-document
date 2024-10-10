@@ -1,10 +1,12 @@
 import argparse
-from langchain.document_loaders.pdf import PyPDFDirectoryLoader
+from langchain_community.document_loaders import PyPDFDirectoryLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from get_embedding_function import get_embedding_function
-from langchain.vectorstores.chroma import Chroma
-
+from langchain_chroma import Chroma
+from colorama import Fore   #Print colored text
+import os
+import shutil
 
 CHROMA_PATH = "chroma"
 DATA_PATH = "data"
@@ -16,7 +18,7 @@ def main():
     parser.add_argument("--reset", action="store_true", help="Reset the database.")
     args = parser.parse_args()
     if args.reset:
-        print("Clearing Database")
+        print(Fore.GREEN + "Clearing Database")
         clear_database()
 
     documents = load_documents()
@@ -49,7 +51,7 @@ def add_to_chroma(chunks: list[Document]):
 
     existing_items = db.get(include=[])  # IDs are always included by default
     existing_ids = set(existing_items["ids"])
-    print(f"Number of existing documents in DB: {len(existing_ids)}")
+    print(Fore.GREEN + f"Number of existing documents in DB: {len(existing_ids)}")
 
     new_chunks = []
     for chunk in chunks_with_ids:
@@ -57,12 +59,12 @@ def add_to_chroma(chunks: list[Document]):
             new_chunks.append(chunk)
 
     if len(new_chunks):
-        print(f"Adding new documents: {len(new_chunks)}")
+        print(Fore.GREEN + f"Adding new documents: {len(new_chunks)}")
         new_chunk_ids = [chunk.metadata["id"] for chunk in new_chunks]
         db.add_documents(new_chunks, ids=new_chunk_ids)
         db.persist()
     else:
-        print("No new documents to add")
+        print(Fore.GREEN + "No new documents to add")
 
 
 def calculate_chunk_ids(chunks):

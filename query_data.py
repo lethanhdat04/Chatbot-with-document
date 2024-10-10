@@ -2,6 +2,7 @@ import argparse
 from langchain_chroma import Chroma
 from langchain.prompts import ChatPromptTemplate
 from langchain_ollama import OllamaLLM
+from colorama import Fore   #Print colored text
 
 from get_embedding_function import get_embedding_function
 
@@ -42,7 +43,7 @@ def query_rag(query_text: str):
 
     sources = [doc.metadata.get("id", None) for doc, _score in results]
     formatted_response = f"Response: {response_text}\nSources: {sources}"
-    print(formatted_response)
+    print(Fore.GREEN + formatted_response)
     return response_text
 
 
