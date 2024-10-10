@@ -1,0 +1,5 @@
+langchain   #LLM library
+langchain_chroma    #Vector storage
+pypdf       #Loading PDFs
+pytest      #Unit testing
+langchain_ollama    #open-source call LLM models
